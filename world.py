@@ -42,7 +42,15 @@ if __name__ == "__main__":
     bike_frame = 0 
     bike_y = 0
     timer = 0
+
     rotation = 0
+    spd_min = 1  # set min speed
+    spd_max = 30 # set max speed
+    spd_up_acc = 0.1
+    spd_down_acc = 0.08
+    spd = spd_min
+    
+   
     # Create 2d List
     world = create_world()
     for i in range(0,5):
@@ -79,11 +87,22 @@ if __name__ == "__main__":
         keys = pygame.key.get_pressed()
         
         if keys[pygame.K_SPACE]:
-            rotation = rotation + 1 # rotate is space is pressed
+
+            rotation = rotation + 1
+        screen.fill((0,150,255))
         
-        screen.fill((0,150,255)) # clear screen and fill it with a blue colour 0,150,255
-		
-		# draw tiles to the world
+        if keys[pygame.K_RIGHT]:
+            if spd + spd_up_acc <= spd_max:
+                spd = spd + spd_up_acc
+            else:
+                spd = spd_max
+        
+        if keys[pygame.K_LEFT]:
+            if spd - spd_down_acc >= spd_min:
+                spd = spd - spd_down_acc
+            else:
+                spd = spd_min
+
         for vy in range(0,14):
             for vx in range(0,20):
                 if world[vy][vx+world_x] != 0:
@@ -92,9 +111,10 @@ if __name__ == "__main__":
 
         blitRotateCenter(screen,bike[bike_frame],(230,230),rotation)
         pygame.display.flip()
-        x = x - 1
-        
-        if x < -32: # after 32 frames move the world 1 pixel forward
+
+        x = x - int(spd)
+        if x < -32:
+
             x = 0
             world_x = world_x + 1
         
