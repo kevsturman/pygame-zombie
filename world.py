@@ -40,6 +40,13 @@ if __name__ == "__main__":
     by = 0
     timer = 0
     r = 0
+    spd_min = 1  # set min speed
+    spd_max = 30 # set max speed
+    spd_up_acc = 0.1
+    spd_down_acc = 0.08
+    spd = spd_min
+    
+    
     # Create 2d List
     world = create_world()
     for i in range(0,5):
@@ -70,8 +77,20 @@ if __name__ == "__main__":
                 done = True
         keys = pygame.key.get_pressed()
         if keys[pygame.K_SPACE]:
-            r = rs + 1
+            r = r + 1
         screen.fill((0,150,255))
+        
+        if keys[pygame.K_RIGHT]:
+            if spd + spd_up_acc <= spd_max:
+                spd = spd + spd_up_acc
+            else:
+                spd = spd_max
+        
+        if keys[pygame.K_LEFT]:
+            if spd - spd_down_acc >= spd_min:
+                spd = spd - spd_down_acc
+            else:
+                spd = spd_min
 
         for vy in range(0,14):
             for vx in range(0,20):
@@ -89,7 +108,7 @@ if __name__ == "__main__":
         #screen.blit(rbike,(180,167-by))
         blitRotateCenter(screen,bike[bx],(230,230),r)
         pygame.display.flip()
-        x = x - 1
+        x = x - int(spd)
         if x < -32:
             x = 0
             wx = wx + 1
